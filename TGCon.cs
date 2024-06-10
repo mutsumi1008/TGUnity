@@ -64,7 +64,7 @@ public class TGCon : MonoBehaviour
     private byte[] buffer;
     private bool keepOnRunning = true;
 
-    
+
 
     public TGCon()
     {
@@ -85,7 +85,7 @@ public class TGCon : MonoBehaviour
         if (rec_raw)
         {
             ew = new StreamWriter("./Assets/raw.txt", true);
-            ew.Write(DateTime.Now+ "\n");
+            ew.Write(DateTime.Now + "\n");
         }
     }
 
@@ -109,7 +109,6 @@ public class TGCon : MonoBehaviour
     private void ParseData()
     {
         //gather data string from stream and parse JSON.
-
         if (stream.CanRead)
         {
             try
@@ -148,7 +147,6 @@ public class TGCon : MonoBehaviour
                                 Debug.Log("ATT:" + tgd.eSense.attention + " MED:" + tgd.eSense.meditation + " Del:" + tgd.eegPower.delta + " The:" + tgd.eegPower.theta + " lAl:" + tgd.eegPower.lowAlpha + " hAl:" + tgd.eegPower.highAlpha +
                                     " lBe:" + tgd.eegPower.lowBeta + " hBe:" + tgd.eegPower.highBeta + " lGa:" + tgd.eegPower.lowGamma + " hGa:" + tgd.eegPower.highGamma);
                             }
-
                         }
                     }
                     else
@@ -164,9 +162,9 @@ public class TGCon : MonoBehaviour
         }
     }
 
-    public void Disconnect()
+    private void Disconnect()
     {
-        Task.Delay(ThreadSleepTime*2);
+        Task.Delay(ThreadSleepTime * 2);
         if (rec_eSense)
         {
             sw.Flush();
@@ -180,11 +178,11 @@ public class TGCon : MonoBehaviour
         stream.Close();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         keepOnRunning = false;
     }
-    void OnDisable()
+    private void OnDisable()
     {
         keepOnRunning = false;
     }
