@@ -10,7 +10,7 @@ using System;
 
 public class TGCon : MonoBehaviour
 {
-    ////classes for storing data by parsing JSON string
+    ////classes for storing data from parsed JSON string
     [System.Serializable]
     public class rawEEG
     {
@@ -47,15 +47,15 @@ public class TGCon : MonoBehaviour
 
     public TGData tgd;
 
-    public int ThreadSleepTime = 50;//time to wait for the subThread to aquire next chunk of data from stream. Better to set this small enough (or set the buffer size large enough) because the stream data may grow larger than the buffer size. 
+    public int ThreadSleepTime = 50;//time to wait for the subThread to aquire next chunk of data from the stream. Better to set this small enough (or set the buffer size large enough) because the data chunk may grow larger than the buffer size. 
     private int bufferSize = 2048;///def for size of the buffer which holds the streamed string (from think gear connector)
-    public bool showDataOnConsole = false;
+    public bool showDataOnConsole = false;//If you want to see the data gathered on console (eSense data only)
 
     /////// recording data to text file:: simply dumping JSON string to file....thus the file may grow huge in its size...
     public bool rec_eSense = false;/// set true if you want to record eSense data to text file 
     public bool rec_raw = false;/// set true if you want to record raw EEG data to text file
-    StreamWriter sw;// Stream writer for recording eSense data
-    StreamWriter ew;// Stream writer for recording raw data
+    StreamWriter eSenseOut;// Stream writer for recording eSense data
+    StreamWriter rawOut;// Stream writer for recording raw data
     private uint eSenseCount = 0;// counter for number of eSense data 
     private uint eegCount = 0;//counter for number of raw data
 
@@ -64,7 +64,8 @@ public class TGCon : MonoBehaviour
     private byte[] buffer;
     private bool keepOnRunning = true;
 
-
+    private Thread thread;
+    private ThreadStart ts;
 
     public TGCon()
     {
@@ -73,19 +74,19 @@ public class TGCon : MonoBehaviour
 
     void Start()
     {
-        ThreadStart ts = new ThreadStart(Connect);
-        Thread thread = new Thread(ts);
+        ts = new ThreadStart(Connect);
+        thread = new Thread(ts);
         thread.Start();
 
         if (rec_eSense)
         {
-            sw = new StreamWriter("./Assets/eSenseData.txt", true);
-            sw.Write(DateTime.Now + "\n");
+            eSenseOut = new StreamWriter("./Assets/eSenseData.txt", true);
+            eSenseOut.Write(DateTime.Now + "\n");
         }
         if (rec_raw)
         {
-            ew = new StreamWriter("./Assets/raw.txt", true);
-            ew.Write(DateTime.Now + "\n");
+            rawOut = new StreamWriter("./Assets/raw.txt", true);
+            rawOut.Write(DateTime.Now + "\n");
         }
     }
 
@@ -102,7 +103,6 @@ public class TGCon : MonoBehaviour
             ParseData();
             Thread.Sleep(ThreadSleepTime);
         }
-
         Disconnect();
     }
 
@@ -115,29 +115,28 @@ public class TGCon : MonoBehaviour
             {
                 int bytesRead = stream.Read(buffer, 0, buffer.Length);
                 string packet = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-                ////////////////////////////////////////////////////////
                 StringReader Rdr = new StringReader(packet);
                 while (true)
                 {
-                    string ol = Rdr.ReadLine();
-                    if (ol != null)
+                    string dataLine = Rdr.ReadLine();
+                    if (dataLine != null)
                     {
-                        if (ol.Contains("rawEeg"))
+                        if (dataLine.Contains("rawEeg"))
                         {
-                            rawEEG raw = JsonUtility.FromJson<rawEEG>(ol);
+                            rawEEG raw = JsonUtility.FromJson<rawEEG>(dataLine);
                             if (rec_raw && keepOnRunning)
                             {
-                                ew.Write(eegCount + ", " + ol + "\n");
+                                rawOut.Write(eegCount + ", " + dataLine + "\n");
                             }
                             eegCount++;
                         }
-                        if (ol.Contains("eSense"))
+                        if (dataLine.Contains("eSense"))
                         {
-                            tgd = JsonUtility.FromJson<TGData>(ol);
+                            tgd = JsonUtility.FromJson<TGData>(dataLine);
 
                             if (rec_eSense && keepOnRunning)
                             {
-                                sw.Write(eSenseCount + ", " + ol + "\n");
+                                eSenseOut.Write(eSenseCount + ", " + dataLine + "\n");
                             }
 
                             eSenseCount++;
@@ -164,18 +163,20 @@ public class TGCon : MonoBehaviour
 
     private void Disconnect()
     {
-        Task.Delay(ThreadSleepTime * 2);
+        //closing everything
+        Task.Delay(ThreadSleepTime * 2);//just in case 
         if (rec_eSense)
         {
-            sw.Flush();
-            sw.Close();
+            eSenseOut.Flush();
+            eSenseOut.Close();
         }
         if (rec_raw)
         {
-            ew.Flush();
-            ew.Close();
+            rawOut.Flush();
+            rawOut.Close();
         }
         stream.Close();
+        thread.Abort();//just in case 
     }
 
     private void OnDestroy()
