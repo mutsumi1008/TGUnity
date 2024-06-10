@@ -180,17 +180,9 @@ public class TGCon : MonoBehaviour
         stream.Close();
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void OnDestroy()
     {
         keepOnRunning = false;
-        
     }
     void OnDisable()
     {
