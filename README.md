@@ -1,4 +1,4 @@
-# TGCon
+# ThinkGearUnity
 C# script for Unity, which connects to Neurosky's ThinkGear  (e.g. Mindwave) and gather EEG data.
 
 # Requirement
