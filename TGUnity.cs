@@ -8,7 +8,7 @@ using System.IO;
 using UnityEngine;
 using System;
 
-public class TGCon : MonoBehaviour
+public class TGUnity : MonoBehaviour
 {
     ////classes for storing data from parsed JSON string
     [System.Serializable]
@@ -67,7 +67,7 @@ public class TGCon : MonoBehaviour
     private Thread thread;
     private ThreadStart ts;
 
-    public TGCon()
+    public TGUnity()
     {
         //Constructor
     }
