@@ -10,3 +10,7 @@ Other notes in script (see comments).
 
 # Note
 Might need to change some parameters (int bufferSize: larger, int ThreadSleepTime: smaller) if JSON parse error occurs.
+
+## Change log
+Jun 10, 2024:: v 0.1
+Jun 13, 2024:: v 0.2 :: timestamp for recored files, minor changes.
