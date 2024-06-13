@@ -117,6 +117,9 @@ public class TGUnity : MonoBehaviour
                 int bytesRead = stream.Read(buffer, 0, buffer.Length);
                 string packet = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                 StringReader Rdr = new StringReader(packet);
+                if(showPacketOnConsole){
+                    Debug.Log(packet);
+                }
                 while (true)
                 {
                     string dataLine = Rdr.ReadLine();
