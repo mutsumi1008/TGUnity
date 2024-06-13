@@ -50,6 +50,7 @@ public class TGUnity : MonoBehaviour
     private int ThreadSleepTime = 50;//time to wait for the subThread to aquire next chunk of data from the stream. Better to set this small enough (or set the buffer size large enough) because the data chunk may grow larger than the buffer size. 
     private int bufferSize = 2048;///def for size of the buffer which holds the streamed string (from think gear connector)
     public bool showDataOnConsole = false;//If you want to see the data gathered on console (eSense data only)
+    public bool showPacketOnConsole =false;//If you want take a look on packets gathered from Thinkgear Connector
 
     /////// recording data to text file:: simply dumping JSON string to file....thus the file may grow huge in its size...
     public bool rec_eSense = false;/// set true if you want to record eSense data to text file 
