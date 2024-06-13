@@ -13,4 +13,5 @@ Might need to change some parameters (int bufferSize: larger, int ThreadSleepTim
 
 ## Change log
 Jun 10, 2024:: v 0.1
+
 Jun 13, 2024:: v 0.2 :: timestamp for recored files, minor changes.
