@@ -126,7 +126,7 @@ public class TGUnity : MonoBehaviour
                             rawEEG raw = JsonUtility.FromJson<rawEEG>(dataLine);
                             if (rec_raw && keepOnRunning)
                             {
-                                rawOut.Write(eegCount + ", " + dataLine + "\n");
+                                rawOut.Write(eegCount + ", " + DateTime.Now + ", " + dataLine + "\n");
                             }
                             eegCount++;
                         }
@@ -136,7 +136,7 @@ public class TGUnity : MonoBehaviour
 
                             if (rec_eSense && keepOnRunning)
                             {
-                                eSenseOut.Write(eSenseCount + ", " + dataLine + "\n");
+                                eSenseOut.Write(eSenseCount + ", " + DateTime.Now + ", " + dataLine + "\n");
                             }
 
                             eSenseCount++;
