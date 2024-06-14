@@ -53,8 +53,8 @@ public class TGUnity : MonoBehaviour
     public bool showPacketOnConsole =false;//If you want take a look on packets gathered from Thinkgear Connector
 
     /////// recording data to text file:: simply dumping JSON string to file....thus the file may grow huge in its size...
-    public bool rec_eSense = false;/// set true if you want to record eSense data to text file 
-    public bool rec_raw = false;/// set true if you want to record raw EEG data to text file
+    private bool rec_eSense = false;/// set true if you want to record eSense data to text file 
+    private bool rec_raw = false;/// set true if you want to record raw EEG data to text file
     StreamWriter eSenseOut;// Stream writer for recording eSense data
     StreamWriter rawOut;// Stream writer for recording raw data
     private uint eSenseCount = 0;// counter for number of eSense data 
