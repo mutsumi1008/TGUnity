@@ -15,3 +15,5 @@ Might need to change some parameters (int bufferSize: larger, int ThreadSleepTim
 Jun 10, 2024:: v 0.1
 
 Jun 13, 2024:: v 0.2 :: timestamp for recored files, minor changes.
+
+Jun 13, 2024:: v 0.2.1 :: minor fix (changed some variables from public to private, to avoid App crash)
