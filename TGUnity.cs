@@ -53,7 +53,7 @@ public class TGUnity : MonoBehaviour
     public bool showPacketOnConsole =false;//If you want take a look on packets gathered from Thinkgear Connector
 
     /////// recording data to text file:: simply dumping JSON string to file....thus the file may grow huge in its size...
-    private bool rec_eSense = false;/// set true if you want to record eSense data to text file 
+    private bool rec_eSense = true;/// set true if you want to record eSense data to text file 
     private bool rec_raw = false;/// set true if you want to record raw EEG data to text file
     StreamWriter eSenseOut;// Stream writer for recording eSense data
     StreamWriter rawOut;// Stream writer for recording raw data
@@ -75,19 +75,26 @@ public class TGUnity : MonoBehaviour
 
     void Start()
     {
+        DateTime dt = DateTime.Now;
+        String fileName = dt.ToString("yyyyMMdd_HHmmss");
+        String rawName = "rawRec" + fileName +".csv";
+        fileName = "ESenceRec" + fileName+".csv";
+        Debug.Log(fileName);
         ts = new ThreadStart(Connect);
         thread = new Thread(ts);
         thread.Start();
 
         if (rec_eSense)
         {
-            eSenseOut = new StreamWriter("./Assets/eSenseData.txt", true);
-            eSenseOut.Write(DateTime.Now + "\n");
+            //eSenseOut = new StreamWriter("./Assets/eSenseData.txt", true);
+            eSenseOut = new StreamWriter(fileName, true);
+            //eSenseOut.Write(dt + "\n");
+            eSenseOut.Write("DataCount,DateTime,ATT,MED,delta,theta,lowAlpha,highAlpha,lowBeta,highBeta,lowGamma,highGamma\n");
         }
         if (rec_raw)
         {
-            rawOut = new StreamWriter("./Assets/raw.txt", true);
-            rawOut.Write(DateTime.Now + "\n");
+            rawOut = new StreamWriter(rawName, true);
+            //rawOut.Write(DateTime.Now + "\n");
         }
     }
 
@@ -140,7 +147,8 @@ public class TGUnity : MonoBehaviour
 
                             if (rec_eSense && keepOnRunning)
                             {
-                                eSenseOut.Write(eSenseCount + ", " + DateTime.Now + ", " + dataLine + "\n");
+                                //eSenseOut.Write(eSenseCount + ", " + DateTime.Now + ", " + dataLine + "\n");
+                                eSenseOut.Write(eSenseCount + ", " + DateTime.Now + ", " + tgd.eSense.attention + "," + tgd.eSense.meditation + "," + tgd.eegPower.delta + "," + tgd.eegPower.theta + "," + tgd.eegPower.lowAlpha + "," + tgd.eegPower.highAlpha + "," + tgd.eegPower.lowBeta + "," + tgd.eegPower.highBeta + "," + tgd.eegPower.lowGamma + "," + tgd.eegPower.highGamma + "\n");
                             }
 
                             eSenseCount++;
